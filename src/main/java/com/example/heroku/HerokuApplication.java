@@ -47,13 +47,13 @@ public class HerokuApplication {
 
   public String getRandomString() {
     // Define the character set from which the random string will be generated
-    String charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    String charset = "abcdefghijklmnopqrstuvwxyz";
     Random random = new Random();  // Use SecureRandom for cryptographic security
     
-    StringBuilder stringBuilder = new StringBuilder(30);  // 30-character random string
+    StringBuilder stringBuilder = new StringBuilder(10);  // 30-character random string
     
     // Build the random string
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 10; i++) {
         int index = random.nextInt(charset.length());  // Get a random index from the charset
         stringBuilder.append(charset.charAt(index));   // Append the character at that index
     }
@@ -82,7 +82,7 @@ public class HerokuApplication {
 
       ArrayList<String> output = new ArrayList<String>();
       while (rs.next()) {
-        output.add("Read from DB: " + rs.getTimestamp("tick") + getRandomString());
+        output.add("Read from DB: " + rs.getTimestamp("tick") + " " + getRandomString());
       }
 
       model.put("records", output);
