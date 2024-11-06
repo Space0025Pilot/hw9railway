@@ -33,7 +33,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Map;
-import java.security.SecureRandom;
+import java.util.Random;
 
 @Controller
 @SpringBootApplication
@@ -45,14 +45,10 @@ public class HerokuApplication {
   @Autowired
   private DataSource dataSource;
 
-  public static void main(String[] args) throws Exception {
-    SpringApplication.run(HerokuApplication.class, args);
-  }
-
   public String getRandomString() {
     // Define the character set from which the random string will be generated
     String charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    SecureRandom random = new SecureRandom();  // Use SecureRandom for cryptographic security
+    Random random = new Random();  // Use SecureRandom for cryptographic security
     
     StringBuilder stringBuilder = new StringBuilder(30);  // 30-character random string
     
@@ -63,7 +59,11 @@ public class HerokuApplication {
     }
     
     return stringBuilder.toString();  // Return the random string
- }
+  }
+
+  public static void main(String[] args) throws Exception {
+    SpringApplication.run(HerokuApplication.class, args);
+  }
 
   @RequestMapping("/")
   String index() {
