@@ -33,6 +33,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Map;
+import java.security.SecureRandom;
 
 @Controller
 @SpringBootApplication
@@ -48,6 +49,22 @@ public class HerokuApplication {
     SpringApplication.run(HerokuApplication.class, args);
   }
 
+  public String getRandomString() {
+    // Define the character set from which the random string will be generated
+    String charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    SecureRandom random = new SecureRandom();  // Use SecureRandom for cryptographic security
+    
+    StringBuilder stringBuilder = new StringBuilder(30);  // 30-character random string
+    
+    // Build the random string
+    for (int i = 0; i < 30; i++) {
+        int index = random.nextInt(charset.length());  // Get a random index from the charset
+        stringBuilder.append(charset.charAt(index));   // Append the character at that index
+    }
+    
+    return stringBuilder.toString();  // Return the random string
+ }
+
   @RequestMapping("/")
   String index() {
     return "index";
@@ -57,11 +74,11 @@ public class HerokuApplication {
   String db(Map<String, Object> model) {
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
-      stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-      // stmt.executeUpdate("CREATE TABLE IF NOT EXISTS table_timestamp_and_random_string (tick timestamp, random_string varchar(30))");
-      // stmt.executeUpdate("INSERT INTO table_timestamp_and_random_string VALUES (now(), '" + getRandomString() + "')");
-      ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
+      // stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
+      // stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS table_timestamp_and_random_string (tick timestamp, random_string varchar(30))");
+      stmt.executeUpdate("INSERT INTO table_timestamp_and_random_string VALUES (now(), '" + getRandomString() + "')");
+      ResultSet rs = stmt.executeQuery("SELECT tick FROM table_timestamp_and_random_string");
 
       ArrayList<String> output = new ArrayList<String>();
       while (rs.next()) {
